@@ -49,13 +49,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.indigoAccent,
-        title: Text('Minhas despesas'),
+        title: const Text(
+          'Minhas despesas',
+        ),
         centerTitle: true,
         actions: [
           IconButton(
             onPressed: () => _startAddNewTransaction(context),
-            icon: Icon(Icons.add_circle_outline_rounded),
+            icon: const Icon(
+              Icons.add_circle_outline_rounded,
+            ),
           )
         ],
       ),
