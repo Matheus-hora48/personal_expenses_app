@@ -9,8 +9,10 @@ class TransactionList extends StatefulWidget {
   const TransactionList({
     Key? key,
     required this.transaction,
+    required this.deleteTx,
   }) : super(key: key);
   final List<Transaction> transaction;
+  final Function deleteTx;
 
   @override
   State<TransactionList> createState() => _TransactionListState();
@@ -100,7 +102,8 @@ class _TransactionListState extends State<TransactionList> {
                           ),
                         ),
                         trailing: IconButton(
-                          onPressed: () {},
+                          onPressed: () =>
+                              widget.deleteTx(widget.transaction[index].id),
                           icon: const Icon(
                             Icons.restore_from_trash_rounded,
                             color: Colors.blueAccent,

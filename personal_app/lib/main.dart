@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
             fontSize: 20,
           ),
         ),
+        buttonTheme: ButtonTheme.of(context).copyWith(),
         fontFamily: 'Quicksand',
       ),
       debugShowCheckedModeBanner: false,
