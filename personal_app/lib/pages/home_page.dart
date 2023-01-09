@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -59,46 +62,97 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  bool _showChart = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Minhas despesas',
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () => _startAddNewTransaction(context),
-            icon: const Icon(
-              Icons.add_circle_outline_rounded,
+    final mediaQuery = MediaQuery.of(context);
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+    var transactionList = TransactionList(
+      transaction: _transaction,
+      deleteTx: _deleteTransaction,
+    );
+
+    final appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: const Text(
+              'Minhas despesas',
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  child: Icon(
+                    Icons.add_circle_outline_rounded,
+                  ),
+                  onTap: () => _startAddNewTransaction(context),
+                )
+              ],
             ),
           )
+        : AppBar(
+            title: const Text(
+              'Minhas despesas',
+            ),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                onPressed: () => _startAddNewTransaction(context),
+                icon: const Icon(
+                  Icons.add_circle_outline_rounded,
+                ),
+              )
+            ],
+          );
+
+    final pageBody = Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (isLandscape)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Mostrar grafico '),
+                SizedBox(
+                  width: 10,
+                ),
+                Switch.adaptive(
+                  value: _showChart,
+                  onChanged: (val) {
+                    setState(() {
+                      _showChart = val;
+                    });
+                  },
+                ),
+              ],
+            ),
+          if (!isLandscape) Chart(_recentTransactions),
+          if (!isLandscape) transactionList,
+          if (isLandscape)
+            _showChart ? Chart(_recentTransactions) : transactionList
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Chart(_recentTransactions),
-            const SizedBox(
-              height: 50,
-            ),
-            TransactionList(
-              transaction: _transaction,
-              deleteTx: _deleteTransaction,
-            )
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _startAddNewTransaction(context),
-        child: Icon(Icons.add_circle_rounded),
-        backgroundColor: Colors.indigoAccent,
-      ),
     );
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: appBar,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    onPressed: () => _startAddNewTransaction(context),
+                    child: Icon(Icons.add_circle_rounded),
+                    backgroundColor: Colors.indigoAccent,
+                  ),
+          );
   }
 }

@@ -101,14 +101,20 @@ class _TransactionListState extends State<TransactionList> {
                             fontSize: 16,
                           ),
                         ),
-                        trailing: IconButton(
-                          onPressed: () =>
-                              widget.deleteTx(widget.transaction[index].id),
-                          icon: const Icon(
-                            Icons.restore_from_trash_rounded,
-                            color: Colors.blueAccent,
-                          ),
-                        ),
+                        trailing: MediaQuery.of(context).size.width > 360
+                            ? TextButton(
+                                onPressed: () => widget
+                                    .deleteTx(widget.transaction[index].id),
+                                child: Text('Deletar'),
+                              )
+                            : IconButton(
+                                onPressed: () => widget
+                                    .deleteTx(widget.transaction[index].id),
+                                icon: const Icon(
+                                  Icons.restore_from_trash_rounded,
+                                  color: Colors.blueAccent,
+                                ),
+                              ),
                       ),
                     );
                   },
