@@ -105,34 +105,36 @@ class _HomePageState extends State<HomePage> {
             ],
           );
 
-    final pageBody = Padding(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (isLandscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Mostrar grafico '),
-                SizedBox(
-                  width: 10,
-                ),
-                Switch.adaptive(
-                  value: _showChart,
-                  onChanged: (val) {
-                    setState(() {
-                      _showChart = val;
-                    });
-                  },
-                ),
-              ],
-            ),
-          if (!isLandscape) Chart(_recentTransactions),
-          if (!isLandscape) transactionList,
-          if (isLandscape)
-            _showChart ? Chart(_recentTransactions) : transactionList
-        ],
+    final pageBody = SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Mostrar grafico '),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Switch.adaptive(
+                    value: _showChart,
+                    onChanged: (val) {
+                      setState(() {
+                        _showChart = val;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            if (!isLandscape) Chart(_recentTransactions),
+            if (!isLandscape) transactionList,
+            if (isLandscape)
+              _showChart ? Chart(_recentTransactions) : transactionList
+          ],
+        ),
       ),
     );
 
